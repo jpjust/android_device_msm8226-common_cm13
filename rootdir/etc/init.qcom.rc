@@ -41,6 +41,7 @@ on early-init
     symlink /data/tombstones /tombstones
 
 on init
+    export LD_PRELOAD "/system/lib/libboringssl-compat.so"
     export LD_PRELOAD "/system/lib/libsamsung_symbols.so"
 
     # Support legacy paths
@@ -956,18 +957,16 @@ on property:crypto.driver.load=0
     exec /system/bin/rmmod qce.ko
 
 # Dual-sim support
-on property:persist.radio.multisim.config=dsds
-    stop ril-daemon
-    start ril-daemon
-    start ril-daemon2
-
-service ril-daemon2 /system/bin/rild -s rild2 -ds rild-debug1 -l /system/lib/libsec-ril-dsds.so
+service ril-daemon2 /system/bin/rild -c 2
     class main
     socket rild2 stream 660 root radio
-    socket rild-debug1 stream 660 radio system
+    socket rild-debug2 stream 660 radio system
     user root
+    group radio cache inet misc audio sdcard_rw qcom_oncrpc qcom_diag log
     disabled
-    group radio cache inet misc audio sdcard_r sdcard_rw diag qcom_diag log
+
+on property:persist.radio.multisim.config=dsds
+    start ril-daemon2
 
 on charger
     mount_all fstab.qcom

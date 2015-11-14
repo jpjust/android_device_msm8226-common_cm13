@@ -19,6 +19,16 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 # The gps config appropriate for this device
 $(call inherit-product, device/common/gps/gps_as_supl.mk)
 
+# ANT+
+PRODUCT_PACKAGES += \
+    AntHalService \
+    com.dsi.ant.antradio_library \
+    libantradio
+
+# Art
+#PRODUCT_PROPERTY_OVERRIDES += \
+#    dalvik.vm.dex2oat-flags=--no-watch-dog
+
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
@@ -89,6 +99,10 @@ PRODUCT_PACKAGES += \
     libstlport \
     libxml2
 
+# Connectivity
+PRODUCT_PACKAGES += \
+    libcnefeatureconfig
+
 # CRDA
 PRODUCT_PACKAGES += \
     crda \
@@ -136,6 +150,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/gps.conf:system/etc/gps.conf \
     $(LOCAL_PATH)/configs/sap.conf:system/etc/sap.conf
 
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.gps.agps_provider=1
+
 # IR
 PRODUCT_PACKAGES += \
     consumerir.msm8226
@@ -149,7 +166,7 @@ PRODUCT_COPY_FILES += \
 
 # Keystore
 #PRODUCT_PACKAGES += \
-#keystore.msm8226
+#    keystore.msm8226
 
 # Lights
 PRODUCT_PACKAGES += \
